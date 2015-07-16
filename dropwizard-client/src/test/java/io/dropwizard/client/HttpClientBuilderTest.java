@@ -350,6 +350,23 @@ public class HttpClientBuilderTest {
         assertThat(spyHttpClientField("defaultConfig", client.getClient())).isEqualTo(client.getDefaultRequestConfig());
     }
 
+    @Test
+    public void disableStaleConnectionCheckByDefault() throws Exception {
+        ConfiguredCloseableHttpClient client = builder.using(configuration).createClient(apacheBuilder, connectionManager, "test");
+        assertThat(client).isNotNull();
+        assertThat(client.getDefaultRequestConfig().isStaleConnectionCheckEnabled()).isEqualTo(false);
+        assertThat(FieldUtils.getField(RequestConfig.class, "staleConnectionCheckEnabled", true).get(spyHttpClientField("defaultConfig", client.getClient()))).isEqualTo(false);
+    }
+
+    @Test
+    public void enableStaleConnectionCheckIfConfigSet() throws Exception {
+        configuration.setStaleConnectionCheckEnabled(true);
+        ConfiguredCloseableHttpClient client = builder.using(configuration).createClient(apacheBuilder, connectionManager, "test");
+        assertThat(client).isNotNull();
+        assertThat(client.getDefaultRequestConfig().isStaleConnectionCheckEnabled()).isEqualTo(true);
+        assertThat(FieldUtils.getField(RequestConfig.class, "staleConnectionCheckEnabled", true).get(spyHttpClientField("defaultConfig", client.getClient()))).isEqualTo(true);
+    }
+
     private Object spyHttpClientBuilderField(final String fieldName, final Object obj) throws Exception {
         final Field field = FieldUtils.getField(httpClientBuilderClass, fieldName, true);
         return field.get(obj);

@@ -46,6 +46,8 @@ public class HttpClientConfiguration {
     @NotNull
     private Optional<String> userAgent = Optional.absent();
 
+    private boolean staleConnectionCheckEnabled = false;
+
     @JsonProperty
     public Duration getKeepAlive() {
         return keepAlive;
@@ -102,6 +104,11 @@ public class HttpClientConfiguration {
     }
 
     @JsonProperty
+    public boolean getStaleConnectionCheckEnabled() {
+        return staleConnectionCheckEnabled;
+    }
+
+    @JsonProperty
     public void setConnectionRequestTimeout(Duration connectionRequestTimeout) {
         this.connectionRequestTimeout = connectionRequestTimeout;
     }
@@ -144,5 +151,10 @@ public class HttpClientConfiguration {
     @JsonProperty
     public void setUserAgent(Optional<String> userAgent) {
         this.userAgent = userAgent;
+    }
+
+    @JsonProperty
+    public void setStaleConnectionCheckEnabled(boolean staleConnectionCheckEnabled) {
+        this.staleConnectionCheckEnabled = staleConnectionCheckEnabled;
     }
 }
